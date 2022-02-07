@@ -4,10 +4,15 @@ import com.store.rewardservice.model.DataSetDto;
 import com.store.rewardservice.model.TransactionVO;
 import com.store.rewardservice.service.IRewardCalculationService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 @SpringBootTest
@@ -15,8 +20,8 @@ class RewardServiceApplicationTests {
     @Autowired
     private IRewardCalculationService iRewardCalculationService;
 
-    @Test
-    void contextLoads() {
+    @BeforeAll
+    public  static void contextLoads() {
     }
 
     @Test
@@ -29,7 +34,7 @@ class RewardServiceApplicationTests {
     public void getLast3MonthRewardsTest() {
         List<DataSetDto> awardsList = iRewardCalculationService.getLast3MonthsRewardList("C06");
         Assertions.assertNotNull(awardsList);
-        Assertions.assertEquals(2,awardsList.size());
+        Assertions.assertEquals(3,awardsList.size());
     }
 
     @Test
