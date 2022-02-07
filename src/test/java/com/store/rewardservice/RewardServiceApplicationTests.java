@@ -9,10 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.Clock;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.List;
 
 @SpringBootTest
@@ -21,26 +17,26 @@ class RewardServiceApplicationTests {
     private IRewardCalculationService iRewardCalculationService;
 
     @BeforeAll
-    public  static void contextLoads() {
+    public static void contextLoads() {
     }
 
     @Test
     public void calculateRewardServiceTest() {
         long rewards = iRewardCalculationService.calculateRewardsPoints(200);
-        Assertions.assertEquals(250,rewards);
+        Assertions.assertEquals(250, rewards);
     }
 
     @Test
     public void getLast3MonthRewardsTest() {
         List<DataSetDto> awardsList = iRewardCalculationService.getLast3MonthsRewardList("C06");
         Assertions.assertNotNull(awardsList);
-        Assertions.assertEquals(3,awardsList.size());
+        Assertions.assertEquals(3, awardsList.size());
     }
 
     @Test
     public void getTotalRewardsTest() {
         Long totalRewards = iRewardCalculationService.getTotalRewards("C06");
-        Assertions.assertEquals( 850,totalRewards);
+        Assertions.assertEquals(850, totalRewards);
     }
 
     @Test
