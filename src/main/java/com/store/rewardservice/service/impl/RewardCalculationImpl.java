@@ -22,8 +22,8 @@ public class RewardCalculationImpl implements IRewardCalculationService {
     public static final LinkedList<DataSetDto> dataSetDtoList = new LinkedList<DataSetDto>();
     private static AtomicLong atomicLongCount = new AtomicLong(11);
 
-    @PostConstruct
-    public void initDataSetDtos() {
+   static {
+        log.info("Initializing data set on application startup");
         dataSetDtoList.add(new DataSetDto(1l, "C01", LocalDate.of(2021, 02,
                 02), 100L, 0L));
         dataSetDtoList.add(new DataSetDto(2l, "C02", LocalDate.of(2021, 01,
@@ -38,16 +38,17 @@ public class RewardCalculationImpl implements IRewardCalculationService {
                 16), 400L, 850L));
         dataSetDtoList.add(new DataSetDto(7l, "C06", LocalDate.of(2021, 04,
                 17), 100L, 0L));
-        dataSetDtoList.add(new DataSetDto(8l, "C06", LocalDate.of(2021, 05,
-                18), 100L, 0L));
-        dataSetDtoList.add(new DataSetDto(9l, "C06", LocalDate.of(2021, 01,
-                19), 100L, 0L));
-        dataSetDtoList.add(new DataSetDto(10l, "C06", LocalDate.of(2021, 02,
-                20), 100L, 0L));
+        dataSetDtoList.add(new DataSetDto(8l, "C06", LocalDate.of(2022, 01,
+                01), 100L, 0L));
+        dataSetDtoList.add(new DataSetDto(9l, "C06", LocalDate.of(2022, 01,
+                01), 100L, 0L));
+        dataSetDtoList.add(new DataSetDto(10l, "C06", LocalDate.of(2022, 01,
+                01), 100L, 0L));
     }
 
     @Override
     public long calculateRewardsPoints(long price) {
+        log.info("Calculating rewards point");
         if (price >= 50 && price <= 100) {
             return price - 50;
         } else if (price > 100) {
@@ -58,7 +59,7 @@ public class RewardCalculationImpl implements IRewardCalculationService {
 
     @Override
     public void addTransaction(TransactionVO transactionVO) {
-
+        log.info("Adding transaction into data set");
         String customerId = transactionVO.getCustomerId();
         long rewardPoints = calculateRewardsPoints(transactionVO.getPurchasePrice());
         dataSetDtoList.add(new DataSetDto(atomicLongCount.getAndIncrement(), customerId,
@@ -68,15 +69,17 @@ public class RewardCalculationImpl implements IRewardCalculationService {
 
     @Override
     public List<DataSetDto> getLast3MonthsRewardList(String customerId) {
+        log.info("Fetching rewards for last 3 months");
         LocalDate todaysDate = LocalDate.now();
-        LocalDate dateThrreMonthBack = todaysDate.minusMonths(3);
+        LocalDate dateThreeMonthBack = todaysDate.minusMonths(3);
         return this.dataSetDtoList.stream().filter(transaction -> (transaction.getPurChaseDate().isBefore(todaysDate) &&
-                transaction.getPurChaseDate().isAfter(dateThrreMonthBack)) && transaction.getCustomerId().equalsIgnoreCase(customerId)).collect(Collectors.toList());
+                transaction.getPurChaseDate().isAfter(dateThreeMonthBack)) && transaction.getCustomerId().equalsIgnoreCase(customerId)).collect(Collectors.toList());
 
     }
 
     @Override
     public Long getTotalRewards(String customerId) {
+        log.info("Calculating total rewards");
         Optional<Long> reduce = this.dataSetDtoList.stream().filter(transaction ->
                 transaction.getCustomerId().equalsIgnoreCase(customerId)).map(element -> element.getRewardsPoints()).reduce(Long::sum);
         return reduce.get();
@@ -84,6 +87,7 @@ public class RewardCalculationImpl implements IRewardCalculationService {
 
     @Override
     public List<TransactionVO> getAllTransaction() {
+        log.info("AllTransaction method");
         return this.dataSetDtoList.stream().map(element -> {
             return TransactionVO.builder().customerId(element.getCustomerId())
                     .purChaseDate(String.valueOf(element.getPurChaseDate()))
