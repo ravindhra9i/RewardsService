@@ -4,6 +4,7 @@ import com.store.rewardservice.model.DataSetDto;
 import com.store.rewardservice.model.TransactionVO;
 import com.store.rewardservice.service.IRewardCalculationService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,27 +16,27 @@ class RewardServiceApplicationTests {
     @Autowired
     private IRewardCalculationService iRewardCalculationService;
 
-    @Test
-    void contextLoads() {
+    @BeforeAll
+    public static void contextLoads() {
     }
 
     @Test
     public void calculateRewardServiceTest() {
         long rewards = iRewardCalculationService.calculateRewardsPoints(200);
-        Assertions.assertEquals(250,rewards);
+        Assertions.assertEquals(250, rewards);
     }
 
     @Test
     public void getLast3MonthRewardsTest() {
         List<DataSetDto> awardsList = iRewardCalculationService.getLast3MonthsRewardList("C06");
         Assertions.assertNotNull(awardsList);
-        Assertions.assertEquals(2,awardsList.size());
+        Assertions.assertEquals(3, awardsList.size());
     }
 
     @Test
     public void getTotalRewardsTest() {
         Long totalRewards = iRewardCalculationService.getTotalRewards("C06");
-        Assertions.assertEquals( 850,totalRewards);
+        Assertions.assertEquals(850, totalRewards);
     }
 
     @Test
